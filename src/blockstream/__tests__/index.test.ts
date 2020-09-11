@@ -55,18 +55,14 @@ describe("BlockStream API", () => {
     expect(txids.length).toBeGreaterThan(0);
   });
 
-  test(
-    "getAllTransactionsInBlock",
-    async () => {
-      const transactions = await blockStreamHelper.getAllTransactionsInBlock(
-        "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-      );
-      const txids = await blockStreamHelper.getAllTransactionIdsInBlock(
-        "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-      );
-      expect(transactions).toBeDefined();
-      expect(transactions.length).toEqual(txids.length);
-    },
-    5 * 60 * 1000
-  );
+  test("getAllTransactionsInBlock", async () => {
+    const transactions = await blockStreamHelper.getAllTransactionsInBlock(
+      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
+    );
+    const txids = await blockStreamHelper.getAllTransactionIdsInBlock(
+      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
+    );
+    expect(transactions).toBeDefined();
+    expect(transactions.length).toEqual(txids.length);
+  });
 });
