@@ -3,6 +3,7 @@ import {
   WalletWithKeychains,
   Wallet,
   CreateAddressOptions,
+  SendOptions,
 } from "bitgo";
 
 import { NetworkNamesEnum } from "../enums";
@@ -45,4 +46,9 @@ export class BitgoHelper {
   public async getAddresses(walletId: string): Promise<Array<AddressInfo>> {
     return (await this.getWallet(walletId)).addresses();
   }
+
+  // public async send(walletId: string, options: SendOptions) {
+  //   const wallet = await this.getWallet(walletId);
+  //   return wallet.send(options);
+  // }
 }

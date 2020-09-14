@@ -25,7 +25,7 @@ describe.only("Bitgo API", () => {
     expect(walletWithKeychains.wallet.label()).toEqual(label);
   });
 
-  test("createAddress", async () => {
+  test.skip("createAddress", async () => {
     const label = "Address test";
     const addressInfo = await bitgoHelper.createAddress(WALLET_TEST_ID, {
       label,
@@ -34,8 +34,22 @@ describe.only("Bitgo API", () => {
     expect(addressInfo.label).toEqual(label);
   });
 
-  test.only("getAddresses", async () => {
+  test("getAddresses", async () => {
     const addressesInfo = await bitgoHelper.getAddresses(WALLET_TEST_ID);
     expect(addressesInfo).toBeDefined();
   });
+
+  // test.only(
+  //   "getAddresses",
+  //   async () => {
+  //     const result = await bitgoHelper.send(WALLET_TEST_ID, {
+  //       address: "2MwBiURiTojxRxnV6KjjddTSCT7SkENP8hv",
+  //       amount: 500000,
+  //       walletPassphrase: "TPCr7AHpc886nT6",
+  //     });
+  //     console.log(result);
+  //     expect(result).toBeDefined();
+  //   },
+  //   10 * 60 * 1000
+  // );
 });
