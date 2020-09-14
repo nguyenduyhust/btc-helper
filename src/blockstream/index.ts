@@ -84,7 +84,7 @@ export class BlockStreamHelper {
   public async getTransactionsInBlock(block: string | number) {
     const txids = await this.getAllTransactionIdsInBlock(block);
     const transactions: Array<Transaction> = [];
-    const promises = [];
+    const promises: Array<Promise<Array<Transaction>>> = [];
     for (let i = 0; i < txids.length; i = i + 25) {
       promises.push(this.getTransactionsInBlockWithPaging(block, i));
     }
