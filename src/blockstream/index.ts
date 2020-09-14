@@ -117,6 +117,52 @@ export class BlockStreamHelper {
     };
   }
 
+  public async filterTransactionsByAccount(
+    transactions: Array<Transaction>,
+    accountAddress: string,
+    include?: "from" | "to" | "both"
+  ) {
+    return transactions.filter((tx: Transaction) =>
+      include === "from"
+        ? tx.vin.find(
+            (item) => item.prevout?.scriptpubkey_address === accountAddress
+          )
+        : include === "to"
+        ? tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
+        : tx.vin.find(
+            (item) => item.prevout?.scriptpubkey_address === accountAddress
+          ) ||
+          tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
+    );
+  }
+
+  public async filterTransactionsByAccounts(
+    transactions: Array<Transaction>,
+    accountAddresses: Array<string>,
+    include?: "from" | "to" | "both"
+  ) {
+    return transactions.filter((tx: Transaction) => {
+      const vinAddresses = tx.vin.map(
+        (item) => item.prevout?.scriptpubkey_address
+      );
+      const voutAddresses = tx.vout.map((item) => item.scriptpubkey_address);
+      return include === "from"
+        ? vinAddresses.some((address) =>
+            accountAddresses.includes(address || "")
+          )
+        : include === "to"
+        ? voutAddresses.some((address) =>
+            accountAddresses.includes(address || "")
+          )
+        : vinAddresses.some((address) =>
+            accountAddresses.includes(address || "")
+          ) ||
+          voutAddresses.some((address) =>
+            accountAddresses.includes(address || "")
+          );
+    });
+  }
+
   public async getTransactionsByAccount(
     accountAddress: string,
     options: {
@@ -136,17 +182,37 @@ export class BlockStreamHelper {
     return {
       startBlockNumber,
       endBlockNumber,
-      transactions: transactions.filter((tx: Transaction) =>
-        options.include === "from"
-          ? tx.vin.find(
-              (item) => item.prevout?.scriptpubkey_address === accountAddress
-            )
-          : options.include === "to"
-          ? tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
-          : tx.vin.find(
-              (item) => item.prevout?.scriptpubkey_address === accountAddress
-            ) ||
-            tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
+      transactions: this.filterTransactionsByAccount(
+        transactions,
+        accountAddress,
+        options.include
+      ),
+    };
+  }
+
+  public async getTransactionsByAccounts(
+    accountAddresses: Array<string>,
+    options: {
+      startBlockNumber: number;
+      endBlockNumber?: number;
+      include?: "from" | "to" | "both";
+    }
+  ) {
+    const {
+      startBlockNumber,
+      endBlockNumber,
+      transactions,
+    } = await this.getTransactions(
+      options.startBlockNumber,
+      options.endBlockNumber
+    );
+    return {
+      startBlockNumber,
+      endBlockNumber,
+      transactions: this.filterTransactionsByAccounts(
+        transactions,
+        accountAddresses,
+        options.include
       ),
     };
   }

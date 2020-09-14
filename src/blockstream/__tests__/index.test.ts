@@ -100,4 +100,30 @@ describe("BlockStream API", () => {
     },
     60 * 60 * 1000
   );
+
+  test.skip(
+    "getTransactionsByAccount",
+    async () => {
+      const {
+        startBlockNumber,
+        endBlockNumber,
+        transactions,
+      } = await blockStreamHelper.getTransactionsByAccounts(
+        [
+          "2N6JbYee7owxF9H4J4pQ3BENK63PijhYgoF",
+          "2N5CLghtRyxrJ3UVf9FPcMN46qkmL9abgYZ",
+        ],
+        {
+          startBlockNumber: 1833132,
+          endBlockNumber: 1833140,
+          include: "both",
+        }
+      );
+      console.log("transactions: ", JSON.stringify(transactions));
+      expect(startBlockNumber).toEqual(1833132);
+      expect(endBlockNumber).toBeDefined();
+      expect(transactions).toBeDefined();
+    },
+    60 * 60 * 1000
+  );
 });
