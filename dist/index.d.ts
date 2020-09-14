@@ -1,1 +1,2 @@
-export * from "./btc-helper";
+export * from "./bitgo";
+export * from "./blockstream";
