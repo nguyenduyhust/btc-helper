@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "exports": {
+    "./": "./dist"
+  },
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
     "test": "jest --forceExit --verbose"
