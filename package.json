@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "exports": {
-    "./bitgo": "./dist/bigo"
+    "./bitgo": "./dist/bitgo"
   },
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
