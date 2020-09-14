@@ -6,4 +6,4 @@
 .env.test
 
 # build
-dist
+# dist
