@@ -42,8 +42,15 @@ export class BlockStreamHelper {
     return response.data;
   }
 
-  public async getLatestBlock(): Promise<string> {
+  public async getHashOfLastBlock(): Promise<string> {
     const response = await axios.get<string>(`${this.baseUrl}/blocks/tip/hash`);
+    return response.data;
+  }
+
+  public async getHeightOfLastBlock(): Promise<number> {
+    const response = await axios.get<number>(
+      `${this.baseUrl}/blocks/tip/height`
+    );
     return response.data;
   }
 
@@ -63,7 +70,7 @@ export class BlockStreamHelper {
    * @param startIndex - start index transaction (start index must be a multipication of 25)
    * @returns the list of transactions
    */
-  public async getTransactionsInBlock(
+  public async getTransactionsInBlockWithPaging(
     block: string | number,
     startIndex: number = 0
   ) {
@@ -74,16 +81,73 @@ export class BlockStreamHelper {
     return response.data;
   }
 
-  public async getAllTransactionsInBlock(block: string | number) {
+  public async getTransactionsInBlock(block: string | number) {
     const txids = await this.getAllTransactionIdsInBlock(block);
     const transactions: Array<Transaction> = [];
     const promises = [];
-    for (let i = 0; i <= txids.length; i = i + 25) {
-      promises.push(this.getTransactionsInBlock(block, i));
+    for (let i = 0; i < txids.length; i = i + 25) {
+      promises.push(this.getTransactionsInBlockWithPaging(block, i));
     }
     (await Promise.all(promises)).forEach((e) => {
       transactions.push(...e);
     });
     return transactions;
+  }
+
+  public async getTransactions(
+    startBlockNumber: number,
+    endBlockNumber?: number
+  ) {
+    if (!endBlockNumber) {
+      endBlockNumber = await this.getHeightOfLastBlock();
+    }
+    if (startBlockNumber > endBlockNumber) {
+      throw new Error("Start block number must be less than end block number");
+    }
+    const transactions: Transaction[] = [];
+    for (let i = startBlockNumber; i <= endBlockNumber; i++) {
+      const blockHash = await this.getBlockHash(i);
+      const arr = await this.getTransactionsInBlock(blockHash);
+      transactions.push(...arr);
+    }
+    return {
+      startBlockNumber,
+      endBlockNumber,
+      transactions,
+    };
+  }
+
+  public async getTransactionsByAccount(
+    accountAddress: string,
+    options: {
+      startBlockNumber: number;
+      endBlockNumber?: number;
+      include?: "from" | "to" | "both";
+    }
+  ) {
+    const {
+      startBlockNumber,
+      endBlockNumber,
+      transactions,
+    } = await this.getTransactions(
+      options.startBlockNumber,
+      options.endBlockNumber
+    );
+    return {
+      startBlockNumber,
+      endBlockNumber,
+      transactions: transactions.filter((tx: Transaction) =>
+        options.include === "from"
+          ? tx.vin.find(
+              (item) => item.prevout?.scriptpubkey_address === accountAddress
+            )
+          : options.include === "to"
+          ? tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
+          : tx.vin.find(
+              (item) => item.prevout?.scriptpubkey_address === accountAddress
+            ) ||
+            tx.vout.find((item) => item.scriptpubkey_address === accountAddress)
+      ),
+    };
   }
 }

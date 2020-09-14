@@ -1,17 +1,16 @@
 import { BlockStreamHelper } from "../";
 import { NetworkNamesEnum } from "../../enums";
 
+const TRANSACTION_HASH = process.env.TRANSACTION_HASH || "";
+const BLOCK_HASH = process.env.BLOCK_HASH || "";
+
 describe("BlockStream API", () => {
   let blockStreamHelper = new BlockStreamHelper(NetworkNamesEnum.TESTNET);
 
   test("getTransaction", async () => {
-    const tx = await blockStreamHelper.getTransaction(
-      "755c106a0cf0c75f7ce62ba4ca94cfef5e45a7d01b20f517b9e2c50062eb56c8"
-    );
+    const tx = await blockStreamHelper.getTransaction(TRANSACTION_HASH);
     expect(tx).toBeDefined();
-    expect(tx.txid).toEqual(
-      "755c106a0cf0c75f7ce62ba4ca94cfef5e45a7d01b20f517b9e2c50062eb56c8"
-    );
+    expect(tx.txid).toEqual(TRANSACTION_HASH);
     expect(tx.version).toEqual(1);
   });
 
@@ -19,50 +18,86 @@ describe("BlockStream API", () => {
     const blockHash = await blockStreamHelper.getBlockHashFromBlockHeight(
       1832696
     );
-    expect(blockHash).toEqual(
-      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-    );
+    expect(blockHash).toEqual(BLOCK_HASH);
   });
 
   describe("getBlock", () => {
     test("block height as parameter", async () => {
       const block = await blockStreamHelper.getBlock(1832696);
-      expect(block.id).toEqual(
-        "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-      );
+      expect(block.id).toEqual(BLOCK_HASH);
     });
 
     test("block hash as parameter", async () => {
-      const block = await blockStreamHelper.getBlock(
-        "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-      );
-      expect(block.id).toEqual(
-        "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
-      );
+      const block = await blockStreamHelper.getBlock(BLOCK_HASH);
+      expect(block.id).toEqual(BLOCK_HASH);
     });
   });
 
-  test("getLatestBlock", async () => {
-    const blockHash = await blockStreamHelper.getLatestBlock();
+  test("getHashOfLastBlock", async () => {
+    const blockHash = await blockStreamHelper.getHashOfLastBlock();
     expect(blockHash).toBeDefined();
+    expect(typeof blockHash).toEqual("string");
+  });
+
+  test("getHeightOfLastBlock", async () => {
+    const blockHeight = await blockStreamHelper.getHeightOfLastBlock();
+    expect(blockHeight).toBeDefined();
+    expect(typeof blockHeight).toEqual("number");
   });
 
   test("getAllTransactionIdsInBlock", async () => {
     const txids = await blockStreamHelper.getAllTransactionIdsInBlock(
-      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
+      BLOCK_HASH
     );
     expect(txids).toBeDefined();
     expect(txids.length).toBeGreaterThan(0);
   });
 
-  test("getAllTransactionsInBlock", async () => {
-    const transactions = await blockStreamHelper.getAllTransactionsInBlock(
-      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
+  test("getTransactionsInBlock", async () => {
+    const transactions = await blockStreamHelper.getTransactionsInBlock(
+      BLOCK_HASH
     );
     const txids = await blockStreamHelper.getAllTransactionIdsInBlock(
-      "000000000000013ccdf0f5424b757ec0703a323f063cbe39260c58936098eb0b"
+      BLOCK_HASH
     );
     expect(transactions).toBeDefined();
     expect(transactions.length).toEqual(txids.length);
   });
+
+  test.skip(
+    "getTransactions",
+    async () => {
+      const {
+        startBlockNumber,
+        endBlockNumber,
+        transactions,
+      } = await blockStreamHelper.getTransactions(1834400);
+      expect(startBlockNumber).toEqual(1834400);
+      expect(endBlockNumber).toBeDefined();
+      expect(transactions).toBeDefined();
+    },
+    60 * 1000
+  );
+
+  test.skip(
+    "getTransactionsByAccount",
+    async () => {
+      const {
+        startBlockNumber,
+        endBlockNumber,
+        transactions,
+      } = await blockStreamHelper.getTransactionsByAccount(
+        "2N6JbYee7owxF9H4J4pQ3BENK63PijhYgoF",
+        {
+          startBlockNumber: 1833132,
+          endBlockNumber: 1833140,
+          include: "to",
+        }
+      );
+      expect(startBlockNumber).toEqual(1833132);
+      expect(endBlockNumber).toBeDefined();
+      expect(transactions).toBeDefined();
+    },
+    60 * 60 * 1000
+  );
 });

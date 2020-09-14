@@ -8,7 +8,7 @@ export interface TransactionVin {
   inner_redeemscript_asm: string;
   inner_witnessscript_asm: string;
   // previous output
-  prevout: {
+  prevout?: {
     scriptpubkey: string;
     scriptpubkey_asm: string;
     scriptpubkey_type: string;
