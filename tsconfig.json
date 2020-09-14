@@ -10,7 +10,8 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "noImplicitAny": false
   },
   "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "dist"]
 }
