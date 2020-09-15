@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
     "test": "jest --forceExit --verbose",
-    "prepare": "yarn build"
+    "prepare": "npm run build"
   },
   "author": "",
   "license": "ISC",
