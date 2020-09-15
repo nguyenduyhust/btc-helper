@@ -24,6 +24,8 @@
   "files": [
     "bitgo",
     "blockstream",
-    "common"
+    "common",
+    "index.js",
+    "index.d.ts"
   ]
 }
