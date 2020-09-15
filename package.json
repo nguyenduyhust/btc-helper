@@ -23,6 +23,10 @@
     "typescript": "^3.9.7"
   },
   "files": [
-    "dist"
+    "bitgo",
+    "blockstream",
+    "enums",
+    "index.js",
+    "index.d.ts"
   ]
 }
