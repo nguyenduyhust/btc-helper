@@ -2,9 +2,7 @@
   "name": "btc-helper",
   "version": "1.0.0",
   "description": "",
-  "exports": {
-    "./bitgo": "./dist/bitgo"
-  },
+  "main": "src/index.ts",
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
     "test": "jest --forceExit --verbose"
