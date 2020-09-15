@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { NetworkNamesEnum } from "../enums";
+import { NetworkNamesEnum } from "../common";
 import { BlockStreamRoutesEnum } from "./enums";
 import { Block, Transaction } from "./interfaces";
 

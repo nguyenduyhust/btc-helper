@@ -6,7 +6,7 @@ import {
   SendOptions,
 } from "bitgo";
 
-import { NetworkNamesEnum } from "../enums";
+import { NetworkNamesEnum } from "../common";
 import { AddressInfo } from "./interfaces";
 
 export class BitgoHelper {

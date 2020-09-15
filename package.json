@@ -2,11 +2,10 @@
   "name": "btc-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
     "test": "jest --forceExit --verbose",
-    "prepare": "yarn build"
+    "prepare": "yarn build --outDir ./"
   },
   "author": "",
   "license": "ISC",
@@ -25,8 +24,6 @@
   "files": [
     "bitgo",
     "blockstream",
-    "enums",
-    "index.js",
-    "index.d.ts"
+    "common"
   ]
 }
