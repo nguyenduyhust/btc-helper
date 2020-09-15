@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "node ./node_modules/.bin/tsc",
-    "test": "jest --forceExit --verbose"
+    "test": "jest --forceExit --verbose",
+    "prepare": "yarn build"
   },
   "author": "",
   "license": "ISC",
