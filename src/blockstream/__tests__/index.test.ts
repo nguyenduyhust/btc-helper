@@ -1,5 +1,5 @@
 import { BlockStreamHelper } from "../";
-import { NetworkNamesEnum } from "../../enums";
+import { NetworkNamesEnum } from "../../common/enums";
 
 const TRANSACTION_HASH = process.env.TRANSACTION_HASH || "";
 const BLOCK_HASH = process.env.BLOCK_HASH || "";
