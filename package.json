@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
+    "bitcoin-address-validation": "^1.0.2",
     "bitgo": "^11.4.0",
     "ws": "^7.3.1"
   },
@@ -25,6 +26,7 @@
     "bitgo",
     "blockstream",
     "common",
+    "utils",
     "index.js",
     "index.d.ts"
   ]
